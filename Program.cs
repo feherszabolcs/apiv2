@@ -14,7 +14,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-// Program.cs
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAny", builder =>
@@ -74,7 +73,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
