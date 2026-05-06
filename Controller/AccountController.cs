@@ -31,10 +31,9 @@ namespace apiv2.Controller
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var user = await _userManager.Users.FirstOrDefaultAsync(x=> x.UserName == logindto.UserName);
-        
-            if(user == null)
-                return Unauthorized("Invalid username or password");
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == logindto.UserName && x.AssociationId == logindto.AssociationId);
+            if (user == null)
+                return Unauthorized("Invalid username, password or you selected the wrong association!");
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, logindto.Password, false);
             if (!result.Succeeded)

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace apiv2.Controller
 {
-    [Route("api/association")]
+    [Route("api/associations")]
     [ApiController]
     public class AssociationController : ControllerBase
     {
@@ -30,7 +30,7 @@ namespace apiv2.Controller
             var association = _context.Associations.Find(id);
             if (association == null)
                 return NotFound();
-                
+
             return Ok(association);
         }
     }
