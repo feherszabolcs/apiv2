@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apiv2.Data;
+using apiv2.dto.Association;
+using apiv2.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace apiv2.Controller
@@ -32,6 +34,28 @@ namespace apiv2.Controller
                 return NotFound();
 
             return Ok(association);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostAssociation([FromBody] AssociationDto associationDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (associationDto == null)
+                return BadRequest(associationDto);
+
+            var association = new Association()
+            {
+                Name = associationDto.Name,
+                Certificate = associationDto.Certificate,
+                Location = associationDto.Location,
+            };
+
+            _context.Associations.Add(association);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetById), new { id = association.Id }, association);
         }
     }
 }
