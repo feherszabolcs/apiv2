@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using apiv2.Data;
 using apiv2.dto.Association;
+using apiv2.Interfaces;
 using apiv2.Mappers;
 using apiv2.Models;
 using apiv2.Repository;
@@ -16,8 +17,8 @@ namespace apiv2.Controller
     public class AssociationController : ControllerBase
     {
         private readonly PlanderDBContext _context;
-        private readonly AssociationRepository _repo;
-        public AssociationController(PlanderDBContext context, AssociationRepository repo)
+        private readonly IAssociationRepository _repo;
+        public AssociationController(PlanderDBContext context, IAssociationRepository repo)
         {
             _context = context;
             _repo = repo;
@@ -55,6 +56,14 @@ namespace apiv2.Controller
             await _repo.CreateAsync(association);
 
             return CreatedAtAction(nameof(GetById), new { id = association.Id }, association.GetAssociationDto());
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateAssociation([FromRoute] int id, AssociationPatchDto associationPatchDto)
+        {
+            var association = await _repo.UpdateAsync(id, associationPatchDto);
+            if (association == null) return NotFound();
+            return Ok();
         }
     }
 }

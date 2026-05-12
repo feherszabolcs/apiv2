@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using apiv2.Data;
 
@@ -11,9 +12,11 @@ using apiv2.Data;
 namespace apiv2.Migrations
 {
     [DbContext(typeof(PlanderDBContext))]
-    partial class PlanderDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260512195615_update_Association_Model")]
+    partial class update_Association_Model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
