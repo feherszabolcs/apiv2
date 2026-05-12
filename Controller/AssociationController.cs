@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using apiv2.Data;
 using apiv2.dto.Association;
+using apiv2.Mappers;
 using apiv2.Models;
+using apiv2.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace apiv2.Controller
@@ -14,22 +16,25 @@ namespace apiv2.Controller
     public class AssociationController : ControllerBase
     {
         private readonly PlanderDBContext _context;
-        public AssociationController(PlanderDBContext context)
+        private readonly AssociationRepository _repo;
+        public AssociationController(PlanderDBContext context, AssociationRepository repo)
         {
             _context = context;
+            _repo = repo;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var associations = _context.Associations.ToList();
+            var associations = await _repo.GetAllAsync();
+            var associationDto = associations.Select(a => a.GetAssociationDto());
             return Ok(associations);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var association = _context.Associations.Find(id);
+            var association = await _repo.GetByIdAsync(id);
             if (association == null)
                 return NotFound();
 
@@ -45,17 +50,11 @@ namespace apiv2.Controller
             if (associationDto == null)
                 return BadRequest(associationDto);
 
-            var association = new Association()
-            {
-                Name = associationDto.Name,
-                Certificate = associationDto.Certificate,
-                Location = associationDto.Location,
-            };
+            var association = associationDto.ToAssociation();
 
-            _context.Associations.Add(association);
-            await _context.SaveChangesAsync();
+            await _repo.CreateAsync(association);
 
-            return CreatedAtAction(nameof(GetById), new { id = association.Id }, association);
+            return CreatedAtAction(nameof(GetById), new { id = association.Id }, association.GetAssociationDto());
         }
     }
 }

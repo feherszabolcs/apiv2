@@ -1,4 +1,6 @@
 using apiv2.Data;
+using apiv2.Interfaces;
+using apiv2.Repository;
 using apiv2.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -63,6 +65,7 @@ builder.Services.AddAuthentication(opt =>
 });
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
 
 var app = builder.Build();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apiv2.dto.Account;
+using apiv2.Mappers;
 using apiv2.Models;
 using apiv2.Service;
 using Microsoft.AspNetCore.Identity;
@@ -40,12 +41,7 @@ namespace apiv2.Controller
                 return Unauthorized("Invalid username or password");
 
             return Ok(
-                new NewUserDto()
-                {
-                    UserName = user.UserName!,
-                    Email = user.Email!,
-                    Token = _tokenService.CreateToken(user)
-                }
+                UserMapper.GetNewUserDto(user, _tokenService.CreateToken(user))
             );
         }
 
@@ -72,12 +68,7 @@ namespace apiv2.Controller
                     var roleResult = await _userManager.AddToRoleAsync(user, "User");
                     if (roleResult.Succeeded)
                         return Ok(
-                            new NewUserDto()
-                            {
-                                UserName = user.UserName!,
-                                Email = user.Email!,
-                                Token = _tokenService.CreateToken(user)
-                            }
+                            UserMapper.GetNewUserDto(user, _tokenService.CreateToken(user))
                         );
                     else
                         return BadRequest(roleResult.Errors);
