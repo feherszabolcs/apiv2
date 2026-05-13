@@ -18,5 +18,17 @@ namespace apiv2.Mappers
                 Token = token
             };
         }
+        public static AppUser GetAppUserFromRegisterDto(this RegisterDto registerDto)
+        {
+            return new AppUser()
+            {
+                UserName = registerDto.Username,
+                Email = registerDto.Email,
+                Name = registerDto.Name!,
+                Address = registerDto.Address!,
+                GuardNumber = registerDto.GuardNumber!,
+                IsConfirmed = false
+            };
+        }
     }
 }

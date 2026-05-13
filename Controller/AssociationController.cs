@@ -28,7 +28,7 @@ namespace apiv2.Controller
         public async Task<IActionResult> GetAll()
         {
             var associations = await _repo.GetAllAsync();
-            var associationDto = associations.Select(a => a.GetAssociationDto());
+            // var associationDto = associations.Select(a => a.GetAssociationDto());
             return Ok(associations);
         }
 

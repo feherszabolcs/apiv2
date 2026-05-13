@@ -53,14 +53,7 @@ namespace apiv2.Controller
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var user = new AppUser()
-                {
-                    UserName = registerDto.Username,
-                    Email = registerDto.Email,
-                    Name = registerDto.Name!,
-                    Address = registerDto.Address!,
-                    GuardNumber = registerDto.GuardNumber!,
-                };
+                var user = UserMapper.GetAppUserFromRegisterDto(registerDto);
 
                 var createUser = await _userManager.CreateAsync(user, registerDto.Password!);
                 if (createUser.Succeeded)
@@ -83,6 +76,19 @@ namespace apiv2.Controller
                 return StatusCode(500, e.InnerException?.Message ?? e.Message);
                 throw;
             }
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Confirm([FromRoute] string id, [FromBody] ConfirmUserDto dto)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null) return NotFound();
+
+            user.IsConfirmed = dto.IsConfirmed;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded) return BadRequest(result.Errors);
+            return Ok();
         }
     }
 }

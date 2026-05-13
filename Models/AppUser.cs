@@ -11,6 +11,7 @@ namespace apiv2.Models
         public string Name { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string GuardNumber { get; set; } = string.Empty;
+        public bool IsConfirmed { get; set; } = false;
 
         public int? AssociationId { get; set; }
         public Association? Association { get; set; }
