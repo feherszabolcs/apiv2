@@ -67,6 +67,7 @@ builder.Services.AddAuthentication(opt =>
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailService, EmailService>();
+var emailConfig = builder.Configuration.GetSection("EmailSettings").Get<EmailSettings>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();

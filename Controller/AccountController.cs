@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using apiv2.dto.Account;
+using apiv2.Interfaces;
 using apiv2.Mappers;
 using apiv2.Models;
 using apiv2.Service;
@@ -19,12 +20,14 @@ namespace apiv2.Controller
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IEmailService _emailService;
 
-        public AccountController(UserManager<AppUser> manager, ITokenService tokenService, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> manager, ITokenService tokenService, SignInManager<AppUser> signInManager, IEmailService emailService)
         {
             _userManager = manager;
             _tokenService = tokenService;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         [HttpPost("login")]
@@ -60,9 +63,16 @@ namespace apiv2.Controller
                 {
                     var roleResult = await _userManager.AddToRoleAsync(user, "User");
                     if (roleResult.Succeeded)
+                    {
+                        await _emailService.SendAsync(
+                            toEmail: "feherszabi2005@gmail.com",
+                            subject: "Welcome to our app!",
+                            htmlBody: "<h1>Welcome to our app!</h1><p>We're excited to have you on board.</p>"
+                        );
                         return Ok(
                             UserMapper.GetNewUserDto(user, _tokenService.CreateToken(user))
                         );
+                    }
                     else
                         return BadRequest(roleResult.Errors);
                 }

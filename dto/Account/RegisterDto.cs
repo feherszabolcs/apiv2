@@ -22,6 +22,8 @@ namespace apiv2.dto.Account
         public string? Address { get; set; }
         [Required]
         public string? GuardNumber { get; set; }
+        [Required]
+        public bool IsConfirmed { get; set; }
 
     }
 }
