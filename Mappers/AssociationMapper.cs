@@ -24,7 +24,8 @@ namespace apiv2.Mappers
             {
                 Name = associationDto.Name,
                 Certificate = associationDto.Certificate,
-                Location = associationDto.Location
+                Location = associationDto.Location,
+                Email = associationDto.Email
             };
         }
     }

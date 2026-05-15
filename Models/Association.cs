@@ -13,6 +13,7 @@ namespace apiv2.Models
         public string Certificate { get; set; } = string.Empty;
 
         public bool IsConfirmed { get; set; } = false;
+        public string Email { get; set; } = string.Empty;
 
         // public List<Assignment> Assignments { get; set; } = new List<Assignment>();
     }

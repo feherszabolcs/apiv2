@@ -14,5 +14,7 @@ namespace apiv2.dto.Association
         public string Location { get; set; } = "";
         [Required]
         public string Certificate { get; set; } = "";
+        [Required]
+        public string Email { get; set; } = "";
     }
 }
