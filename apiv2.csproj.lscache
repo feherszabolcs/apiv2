@@ -65,6 +65,7 @@ dto/Account/
  LoginDto.cs
  NewUserDto.cs
  RegisterDto.cs
+ UserDto.cs
 dto/Association/
  AssociationDto.cs
  AssociationPatchDto.cs

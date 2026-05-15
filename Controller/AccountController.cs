@@ -18,6 +18,7 @@ namespace apiv2.Controller
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly string ADMIN_URL = "http://localhost:4200";
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
@@ -76,7 +77,7 @@ namespace apiv2.Controller
                             fullName: user.Name,
                             associationName: association.Name,
                             guardNumber: user.GuardNumber,
-                            confirmUrl: $"https://http.cat"
+                            confirmUrl: $"{ADMIN_URL}/confirm-register/{user.Id}"
                         );
                         return Ok(
                             UserMapper.GetNewUserDto(user, _tokenService.CreateToken(user))
@@ -108,6 +109,13 @@ namespace apiv2.Controller
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded) return BadRequest(result.Errors);
             return Ok();
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById([FromRoute] string id)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null) return NotFound();
+            return Ok(UserMapper.GetUserDto(user));
         }
     }
 }

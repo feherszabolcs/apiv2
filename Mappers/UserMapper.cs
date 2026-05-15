@@ -31,5 +31,17 @@ namespace apiv2.Mappers
                 IsConfirmed = false
             };
         }
+        public static UserDto GetUserDto(this AppUser appUser)
+        {
+            return new UserDto()
+            {
+                Name = appUser.Name,
+                Email = appUser.Email!,
+                Address = appUser.Address,
+                GuardNumber = appUser.GuardNumber,
+                IsConfirmed = appUser.IsConfirmed,
+                AssociationName = appUser.Association != null ? appUser.Association.Name : string.Empty
+            };
+        }
     }
 }
