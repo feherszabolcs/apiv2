@@ -1,5 +1,6 @@
 using apiv2.Data;
 using apiv2.Interfaces;
+using apiv2.Models;
 using apiv2.Repository;
 using apiv2.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,6 +64,9 @@ builder.Services.AddAuthentication(opt =>
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!))
     };
 });
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
