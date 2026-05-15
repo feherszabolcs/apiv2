@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <body>
+    <div class="container my-2">
+      <h1>Új regisztrációs kérvény érkezett</h1>
+      <hr />
+      <h2><strong>{{AssociationName}}</strong></h2>
+      <p>
+        {{FullName}} új regisztrációs kérvényt adott be a rendszerbe. Kérem,
+        ellenőrizze a részleteket és hagyja jóvá vagy utasítsa el a kérelmet.
+        <br />
+        <div class="form-group my-4">
+            <strong>Név:</strong> {{FullName}} <br />
+            <strong>Igazolvány szám:</strong> {{GuardNumber}}<br />
+        </div>
+      </p>
+      <a class="btn btn-primary" href="{{ConfirmUrl}}"
+        >Kattintson ide az elbíráláshoz</a
+      >
+    </div>
+  </body>
+  <footer>
+    <div class="container">
+      <hr />
+      <p><i>Ez egy automatikus üzenet, kérjük, ne válaszoljon rá. Az újonnan regisztrált felhasználók a rendszerbe való belépéshez szükséges engedélyt kapnak elfogadás után.</i></p>
+    </div>
+  </footer>
+</html>

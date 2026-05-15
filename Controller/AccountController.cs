@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using apiv2.Data;
 using apiv2.dto.Account;
 using apiv2.Interfaces;
 using apiv2.Mappers;
@@ -21,13 +22,18 @@ namespace apiv2.Controller
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailService _emailService;
+        private readonly PlanderDBContext _context;
+        private readonly IAssociationRepository _associationRepository;
 
-        public AccountController(UserManager<AppUser> manager, ITokenService tokenService, SignInManager<AppUser> signInManager, IEmailService emailService)
+        public AccountController(UserManager<AppUser> manager, ITokenService tokenService, SignInManager<AppUser> signInManager,
+         IEmailService emailService, PlanderDBContext context, IAssociationRepository associationRepository)
         {
             _userManager = manager;
             _tokenService = tokenService;
             _signInManager = signInManager;
             _emailService = emailService;
+            _context = context;
+            _associationRepository = associationRepository;
         }
 
         [HttpPost("login")]
@@ -57,17 +63,20 @@ namespace apiv2.Controller
                     return BadRequest(ModelState);
 
                 var user = UserMapper.GetAppUserFromRegisterDto(registerDto);
-
                 var createUser = await _userManager.CreateAsync(user, registerDto.Password!);
                 if (createUser.Succeeded)
                 {
                     var roleResult = await _userManager.AddToRoleAsync(user, "User");
+                    // var Association = _context.Associations.FirstOrDefault(x => x.Id == registerDto.AssociationId);
+                    var association = await _associationRepository.GetByIdAsync(registerDto.AssociationId);
                     if (roleResult.Succeeded)
                     {
-                        await _emailService.SendAsync(
-                            toEmail: "feherszabi2005@gmail.com",
-                            subject: "Welcome to our app!",
-                            htmlBody: "<h1>Welcome to our app!</h1><p>We're excited to have you on board.</p>"
+                        await _emailService.SendRegisterTemplateAsync(
+                            toEmail: association!.Email,
+                            fullName: user.Name,
+                            associationName: association.Name,
+                            guardNumber: user.GuardNumber,
+                            confirmUrl: $"https://http.cat"
                         );
                         return Ok(
                             UserMapper.GetNewUserDto(user, _tokenService.CreateToken(user))

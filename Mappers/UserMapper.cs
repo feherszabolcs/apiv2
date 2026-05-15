@@ -27,6 +27,7 @@ namespace apiv2.Mappers
                 Name = registerDto.Name!,
                 Address = registerDto.Address!,
                 GuardNumber = registerDto.GuardNumber!,
+                AssociationId = registerDto.AssociationId,
                 IsConfirmed = false
             };
         }

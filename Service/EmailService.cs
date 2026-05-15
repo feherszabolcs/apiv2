@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using apiv2.Interfaces;
 using apiv2.Models;
 using MailKit.Net.Smtp;
@@ -31,7 +27,17 @@ namespace apiv2.Service
             await smtp.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls);
             await smtp.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password);
             await smtp.SendAsync(message);
-            await smtp.DisconnectAsync(true);   
+            await smtp.DisconnectAsync(true);
+        }
+        public async Task SendRegisterTemplateAsync(string toEmail, string fullName, string guardNumber, string associationName, string confirmUrl)
+        {
+            var template = File.ReadAllText("Templates/UserRegistered.html");
+            template = template.Replace("{{FullName}}", fullName);
+            template = template.Replace("{{GuardNumber}}", guardNumber);
+            template = template.Replace("{{ConfirmUrl}}", confirmUrl);
+            template = template.Replace("{{AssociationName}}", associationName);
+
+            await SendAsync(toEmail, "Regisztrációs kérvény", template);
         }
     }
 }
