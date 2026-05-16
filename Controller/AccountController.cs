@@ -64,6 +64,7 @@ namespace apiv2.Controller
                     return BadRequest(ModelState);
 
                 var user = UserMapper.GetAppUserFromRegisterDto(registerDto);
+                user.Association = await _associationRepository.GetByIdAsync(registerDto.AssociationId);
                 var createUser = await _userManager.CreateAsync(user, registerDto.Password!);
                 if (createUser.Succeeded)
                 {
