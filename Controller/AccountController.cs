@@ -64,7 +64,6 @@ namespace apiv2.Controller
                     return BadRequest(ModelState);
 
                 var user = UserMapper.GetAppUserFromRegisterDto(registerDto);
-                user.Association = await _associationRepository.GetByIdAsync(registerDto.AssociationId);
                 var createUser = await _userManager.CreateAsync(user, registerDto.Password!);
                 if (createUser.Succeeded)
                 {
@@ -115,8 +114,20 @@ namespace apiv2.Controller
         public async Task<IActionResult> GetUserById([FromRoute] string id)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+
             if (user == null) return NotFound();
+            user.Association = await _associationRepository.GetByIdAsync((int)user!.AssociationId!);
             return Ok(UserMapper.GetUserDto(user));
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] string id)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null) return NotFound();
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded) return BadRequest(result.Errors);
+            return Ok();
         }
     }
 }
