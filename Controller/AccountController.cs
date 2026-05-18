@@ -67,8 +67,7 @@ namespace apiv2.Controller
                 var createUser = await _userManager.CreateAsync(user, registerDto.Password!);
                 if (createUser.Succeeded)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(user, "User");
-                    // var Association = _context.Associations.FirstOrDefault(x => x.Id == registerDto.AssociationId);
+                    var roleResult = await _userManager.AddToRoleAsync(user, "Tag");
                     var association = await _associationRepository.GetByIdAsync(registerDto.AssociationId);
                     if (roleResult.Succeeded)
                     {
@@ -77,7 +76,7 @@ namespace apiv2.Controller
                             fullName: user.Name,
                             associationName: association.Name,
                             guardNumber: user.GuardNumber,
-                            confirmUrl: $"{ADMIN_URL}/confirm-register/{user.Id}"
+                            confirmUrl: $"{ADMIN_URL}/user-detail/{user.Id}"
                         );
                         return Ok(
                             UserMapper.GetNewUserDto(user, _tokenService.CreateToken(user))
@@ -114,10 +113,10 @@ namespace apiv2.Controller
         public async Task<IActionResult> GetUserById([FromRoute] string id)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
-
+            var userRoles = await _userManager.GetRolesAsync(user!);
             if (user == null) return NotFound();
             user.Association = await _associationRepository.GetByIdAsync((int)user!.AssociationId!);
-            return Ok(UserMapper.GetUserDto(user));
+            return Ok(UserMapper.GetUserDto(user, userRoles.ToList()));
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser([FromRoute] string id)

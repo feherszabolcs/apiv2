@@ -31,7 +31,7 @@ namespace apiv2.Mappers
                 IsConfirmed = false
             };
         }
-        public static UserDto GetUserDto(this AppUser appUser)
+        public static UserDto GetUserDto(this AppUser appUser, List<string> roles)
         {
             return new UserDto()
             {
@@ -40,7 +40,8 @@ namespace apiv2.Mappers
                 Address = appUser.Address,
                 GuardNumber = appUser.GuardNumber,
                 IsConfirmed = appUser.IsConfirmed,
-                AssociationName = appUser.Association != null ? appUser.Association.Name : string.Empty
+                AssociationName = appUser.Association != null ? appUser.Association.Name : string.Empty,
+                Roles = roles
             };
         }
     }

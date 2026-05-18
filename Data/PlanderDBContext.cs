@@ -42,8 +42,8 @@ namespace apiv2.Data
             List<IdentityRole> roles = new List<IdentityRole>
             {
                 new() {Id = "1", Name = "Admin", NormalizedName = "ADMIN", ConcurrencyStamp = "6eca4832-fd33-4e68-8190-10a9274da274"},
-                new() {Id = "2", Name = "Leader", NormalizedName = "LEADER", ConcurrencyStamp = "37635dfc-538e-4edc-aef0-5e0c71606827" },
-                new() {Id = "3", Name = "User", NormalizedName = "USER", ConcurrencyStamp = "90637356-bccb-45e7-b8fc-17acb7d39c81"  }
+                new() {Id = "2", Name = "Vezető", NormalizedName = "VEZETŐ", ConcurrencyStamp = "37635dfc-538e-4edc-aef0-5e0c71606827" },
+                new() {Id = "3", Name = "Tag", NormalizedName = "TAG", ConcurrencyStamp = "90637356-bccb-45e7-b8fc-17acb7d39c81"  }
             };
             builder.Entity<IdentityRole>().HasData(roles);
 

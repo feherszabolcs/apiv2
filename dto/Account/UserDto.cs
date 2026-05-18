@@ -19,6 +19,7 @@ namespace apiv2.dto.Account
         [Required]
         public bool IsConfirmed { get; set; } = false;
         public string AssociationName { get; set; } = string.Empty;
+        public List<string> Roles { get; set; } = new List<string>();
 
     }
 }
