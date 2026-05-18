@@ -33,15 +33,23 @@ builder.Services.AddDbContext<PlanderDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddIdentity<apiv2.Models.AppUser, IdentityRole>(options =>
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
+    options.User.RequireUniqueEmail = false;
 })
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<PlanderDBContext>();
+
+builder.Services
+    .Where(s => s.ServiceType == typeof(IUserValidator<AppUser>))
+    .ToList()
+    .ForEach(v => builder.Services.Remove(v));
+
 
 builder.Services.AddAuthentication(opt =>
 {
@@ -71,6 +79,7 @@ var emailConfig = builder.Configuration.GetSection("EmailSettings").Get<EmailSet
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAssociationRepository, AssociationRepository>();
+builder.Services.AddScoped<IUserValidator<AppUser>, AssociationScopedValidator>();
 
 var app = builder.Build();
 

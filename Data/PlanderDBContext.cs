@@ -27,7 +27,7 @@ namespace apiv2.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Models.Assignee>(x =>x.HasKey(p => new { p.AppUserId, p.AssignmentId }));
+            builder.Entity<Models.Assignee>(x => x.HasKey(p => new { p.AppUserId, p.AssignmentId }));
 
             builder.Entity<Models.Assignee>()
             .HasOne(a => a.AppUser)
@@ -36,8 +36,16 @@ namespace apiv2.Data
 
             builder.Entity<Models.Assignee>()
             .HasOne(a => a.Assignment)
-            .WithMany(u=> u.Assignees)
+            .WithMany(u => u.Assignees)
             .HasForeignKey(a => a.AssignmentId);
+
+            builder.Entity<AppUser>()
+            .HasIndex(u => u.NormalizedUserName)
+            .IsUnique(false);
+
+            builder.Entity<AppUser>()
+            .HasIndex(u => new { u.AssociationId, u.NormalizedUserName })
+            .IsUnique();
 
             List<IdentityRole> roles = new List<IdentityRole>
             {

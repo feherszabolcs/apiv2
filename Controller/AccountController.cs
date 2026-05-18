@@ -44,11 +44,11 @@ namespace apiv2.Controller
                 return BadRequest(ModelState);
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == logindto.UserName && x.AssociationId == logindto.AssociationId);
             if (user == null)
-                return Unauthorized("Invalid username, password or you selected the wrong association!");
+                return Unauthorized("Hibás felhasználónév, jelszó vagy rossz egyesület lett kiválasztva!");
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, logindto.Password, false);
             if (!result.Succeeded)
-                return Unauthorized("Invalid username or password");
+                return Unauthorized("Hibás felhasználónév, jelszó vagy rossz egyesület lett kiválasztva!");
 
             return Ok(
                 UserMapper.GetNewUserDto(user, _tokenService.CreateToken(user))
