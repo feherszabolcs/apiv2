@@ -42,7 +42,8 @@ namespace apiv2.Controller
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == logindto.UserName && x.AssociationId == logindto.AssociationId);
+            var user = await _userManager.Users.Include(u => u.Association).FirstOrDefaultAsync(x => x.UserName == logindto.UserName && x.AssociationId == logindto.AssociationId);
+
             if (user == null)
                 return Unauthorized("Hibás felhasználónév, jelszó vagy rossz egyesület lett kiválasztva!");
 
@@ -127,6 +128,16 @@ namespace apiv2.Controller
             var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded) return BadRequest(result.Errors);
             return Ok();
+        }
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            user.Association = await _associationRepository.GetByIdAsync((int)user.AssociationId!);
+            return Ok(UserMapper.GetUserDto(user, userRoles.ToList()));
         }
     }
 }

@@ -15,7 +15,12 @@ namespace apiv2.Mappers
             {
                 UserName = appUser.UserName!,
                 Email = appUser.Email!,
-                Token = token
+                Token = token,
+                Name = appUser.Name!,
+                Address = appUser.Address!,
+                GuardNumber = appUser.GuardNumber!,
+                IsConfirmed = appUser.IsConfirmed,
+                Association = appUser.Association!
             };
         }
         public static AppUser GetAppUserFromRegisterDto(this RegisterDto registerDto)
