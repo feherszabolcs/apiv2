@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using apiv2.Data;
@@ -11,6 +12,7 @@ using apiv2.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace apiv2.Controller
 {
@@ -139,5 +141,23 @@ namespace apiv2.Controller
             user.Association = await _associationRepository.GetByIdAsync((int)user.AssociationId!);
             return Ok(UserMapper.GetUserDto(user, userRoles.ToList()));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return BadRequest();
+
+            var users = await _userManager.Users.Where(r => r.AssociationId == user.AssociationId).ToListAsync();
+            var res = new List<UserDto>();
+
+            foreach (var item in users)
+            {
+                var roles = await _userManager.GetRolesAsync(item);
+                res.Add(UserMapper.GetUserDto(item, roles.ToList()));
+            }
+            return Ok(res);
+        }
+
     }
 }
