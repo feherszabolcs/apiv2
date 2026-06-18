@@ -45,7 +45,7 @@ namespace apiv2.Mappers
                 Address = appUser.Address,
                 GuardNumber = appUser.GuardNumber,
                 IsConfirmed = appUser.IsConfirmed,
-                AssociationName = appUser.Association != null ? appUser.Association.Name : string.Empty,
+                Association = appUser.Association!,
                 Roles = roles
             };
         }

@@ -18,7 +18,7 @@ namespace apiv2.dto.Account
         public string GuardNumber { get; set; } = string.Empty;
         [Required]
         public bool IsConfirmed { get; set; } = false;
-        public string AssociationName { get; set; } = string.Empty;
+        public Models.Association Association { get; set; } = new();
         public List<string> Roles { get; set; } = new List<string>();
 
     }
